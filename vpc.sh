@@ -62,12 +62,11 @@ function get_vpc(){
                 Y=$(echo "$VPC_CREATION_DATE" | awk -F 'T' '{print $1}' | awk -F '-' '{print $1}')
                 M=$(echo "$VPC_CREATION_DATE" | awk -F 'T' '{print $1}' | awk -F '-' '{print $2}' | sed 's/^0*//')
                 D=$(echo "$VPC_CREATION_DATE" | awk -F 'T' '{print $1}' | awk -F '-' '{print $3}' | sed 's/^0*//')
-                echo "$Y,$M,$D"
                 AGE=$(python3 -c "from datetime import date as d; print(d.today() - d(int($Y),int($M),int($D)))" | awk -F ',' '{print $1}')
                 AGE=$(echo "$AGE" | tr -d " days")
-	            if [[ "$AGE" == "0:00:00" ]]; then
-		            AGE="0"
-	            fi
+	        if [[ "$AGE" == "0:00:00" ]]; then
+		   AGE="0"
+	        fi
                 echo "$IBMCLOUD_ID,$IBMCLOUD_NAME,$icr,$vpc,$AGE" >> "$(pwd)"/vpc.log
             fi
 	    done
@@ -100,7 +99,7 @@ function run (){
 			check_dependencies
 			check_connectivity
 			authenticate "$API_KEY"
-            get_vpc "$IBMCLOUD_ID" "$IBMCLOUD_NAME"
+            		get_vpc "$IBMCLOUD_ID" "$IBMCLOUD_NAME"
 		fi
 	done
     mv "$(pwd)"/vpc.log "$(pwd)"/all.csv
